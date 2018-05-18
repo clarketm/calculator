@@ -12,8 +12,11 @@
     "preset": "react-native"
   },
   "dependencies": {
-    "react": "^16.3.1",
-    "react-native": "~0.55.2"
+    "react": "^16.3.2",
+    "react-native": "~0.55.2",
+    "react-native-elements": "^0.19.1",
+    "react-native-vector-icons": "^4.6.0",
+    "styled-components": "^3.2.6"
   },
   "devDependencies": {
     "babel-preset-react-native-stage-0": "^1.0.1",
