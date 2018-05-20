@@ -1,9 +1,9 @@
-import React from 'react';
-import { Calculator } from './Calculator';
+import React from "react";
+import { Calculator } from "./Calculator";
 
-import renderer from 'react-test-renderer';
+import renderer from "react-test-renderer";
 
-it('renders without crashing', () => {
+it("renders without crashing", () => {
   const rendered = renderer.create(<Calculator />).toJSON();
   expect(rendered).toBeTruthy();
 });

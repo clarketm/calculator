@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { CalculatorKey } from './CalculatorKey';
-import { Keys } from '../constants';
+import React, { Component } from "react";
+import { StyleSheet, View } from "react-native";
+import { CalculatorKey } from "./CalculatorKey";
+import { Keys } from "../constants";
 
 export class CalculatorKeys extends Component {
-
-  render () {
-    const {handlePress} = this.props;
+  render() {
+    const { handlePress } = this.props;
 
     return (
       <View style={styles.container}>
@@ -35,12 +34,12 @@ export class CalculatorKeys extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 6,
-    alignItems: 'stretch',
-    backgroundColor: '#000'
+    alignItems: "stretch",
+    backgroundColor: "#000"
   },
   row: {
     flex: 1,
-    justifyContent: 'space-between',
-    flexDirection: 'row'
+    justifyContent: "space-between",
+    flexDirection: "row"
   }
 });
