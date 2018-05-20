@@ -19,6 +19,11 @@ export const InstanceType = {
   DATE: Date
 };
 
+export const Expression = {
+  ONE: "updateExpression1",
+  TWO: "updateExpression2"
+};
+
 export const KeyType = {
   OPERATOR: "operator",
   OPERAND: "operand",

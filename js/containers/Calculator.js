@@ -5,7 +5,7 @@ import { CalculatorKeys } from "../components/CalculatorKeys";
 import { CalculatorHeader } from "../components/CalculatorHeader";
 import { CalculatorExpression } from "../components/CalculatorExpression";
 import { CalculatorExpressionHistory } from "../components/CalculatorExpressionHistory";
-import { KeyType } from "../utils/constants";
+import { Expression, KeyType } from "../utils/constants";
 import {
   isZero,
   stringToExpression,
@@ -37,15 +37,6 @@ class Calculator extends Component {
     }
   };
 
-  clear = () => {
-    return Promise.all([
-      this.props.updateOperator(null),
-      this.props.updateExpression1("0"),
-      this.props.updateExpression2("0"),
-      this.props.toggleIsEvaluated(false)
-    ]);
-  };
-
   percent = expression => {
     return truncateByEvaluation(expression / 100);
   };
@@ -74,23 +65,22 @@ class Calculator extends Component {
   };
 
   handlePress = (key, type) => {
-    let {
-      expression1,
-      expression2,
-      operator,
-      history,
-      isEvaluated
-    } = this.props;
+    let { expression1, expression2, operator, history } = this.props;
     let expNum, _expression;
-
-    console.log(isEvaluated);
 
     switch (type) {
       case KeyType.CLEAR:
-        return this.clear();
+        return Promise.all([
+          this.props.updateOperator(null),
+          this.props.toggleIsDirty(false),
+          this.props.updateExpression1("0"),
+          this.props.updateExpression2("0"),
+          this.props.toggleIsEvaluated(false)
+        ]);
       case KeyType.OPERATOR:
         return Promise.all([
           this.props.updateOperator(key),
+          this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
@@ -104,6 +94,7 @@ class Calculator extends Component {
         );
         return Promise.all([
           this.props.updateOperator(null),
+          this.props.toggleIsDirty(true),
           this.props.updateExpression1(_expression),
           this.props.updateExpression2("0"),
           this.props.toggleIsEvaluated(true),
@@ -112,37 +103,41 @@ class Calculator extends Component {
         ]);
       case KeyType.PERCENT:
         _expression = this.percent(operator ? expression2 : expression1);
-        if (operator) expNum = "updateExpression2";
-        else expNum = "updateExpression1";
+        if (operator) expNum = Expression.TWO;
+        else expNum = Expression.ONE;
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.NEGATE:
         _expression = this.negate(operator ? expression2 : expression1);
-        if (operator) expNum = "updateExpression2";
-        else expNum = "updateExpression1";
+        if (operator) expNum = Expression.TWO;
+        else expNum = Expression.ONE;
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.DECIMAL:
         _expression = this.decimal(operator ? expression2 : expression1);
-        if (operator) expNum = "updateExpression2";
-        else expNum = "updateExpression1";
+        if (operator) expNum = Expression.TWO;
+        else expNum = Expression.ONE;
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.OPERAND:
         _expression = this.operand(operator ? expression2 : expression1, key);
-        if (operator) expNum = "updateExpression2";
-        else expNum = "updateExpression1";
+        if (operator) expNum = Expression.TWO;
+        else expNum = Expression.ONE;
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
