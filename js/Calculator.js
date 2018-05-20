@@ -93,8 +93,6 @@ export class Calculator extends React.Component {
         break;
     }
 
-    console.log(_expression);
-
     this.setState({
       expression: _expression
     });
