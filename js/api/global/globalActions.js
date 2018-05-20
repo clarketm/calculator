@@ -1,8 +1,10 @@
 import {
-  UPDATE_EXPRESSION,
-  UPDATE_HISTORY,
   TOGGLE_IS_DIRTY,
-  TOGGLE_IS_EVALUATED
+  TOGGLE_IS_EVALUATED,
+  UPDATE_EXPRESSION1,
+  UPDATE_EXPRESSION2,
+  UPDATE_HISTORY,
+  UPDATE_OPERATOR
 } from "./globalConstants";
 
 export const toggleIsDirty = isDirty => ({
@@ -27,14 +29,36 @@ export const toggleIsEvaluatedAsync = isEvaluated => {
   };
 };
 
-export const updateExpression = expression => ({
-  type: UPDATE_EXPRESSION,
-  expression
+export const updateExpression1 = expression1 => ({
+  type: UPDATE_EXPRESSION1,
+  expression1
 });
 
-export const updateExpressionAsync = expression => {
+export const updateExpression1Async = expression1 => {
   return async dispatch => {
-    return await dispatch(updateExpression(expression));
+    return await dispatch(updateExpression1(expression1));
+  };
+};
+
+export const updateExpression2 = expression2 => ({
+  type: UPDATE_EXPRESSION2,
+  expression2
+});
+
+export const updateExpression2Async = expression2 => {
+  return async dispatch => {
+    return await dispatch(updateExpression2(expression2));
+  };
+};
+
+export const updateOperator = operator => ({
+  type: UPDATE_OPERATOR,
+  operator
+});
+
+export const updateOperatorAsync = operator => {
+  return async dispatch => {
+    return await dispatch(updateOperator(operator));
   };
 };
 

@@ -4,8 +4,18 @@ import { GlobalParam } from "./globalConstants";
 
 const __selectGlobal = state => state.get(ReducerKey.GLOBAL);
 
-export const selectExpression = createImmutableSelector(__selectGlobal, state =>
-  state.get(GlobalParam.EXPRESSION)
+export const selectExpression1 = createImmutableSelector(
+  __selectGlobal,
+  state => state.get(GlobalParam.EXPRESSION1)
+);
+
+export const selectExpression2 = createImmutableSelector(
+  __selectGlobal,
+  state => state.get(GlobalParam.EXPRESSION2)
+);
+
+export const selectOperator = createImmutableSelector(__selectGlobal, state =>
+  state.get(GlobalParam.OPERATOR)
 );
 
 export const selectHistory = createImmutableSelector(__selectGlobal, state =>

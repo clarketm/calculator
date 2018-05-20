@@ -10,7 +10,9 @@ const initialState = fromJS({
   [ReducerKey.GLOBAL]: {
     [GlobalParam.IS_EVALUATED]: false,
     [GlobalParam.IS_DIRTY]: false,
-    [GlobalParam.EXPRESSION]: "0",
+    [GlobalParam.EXPRESSION1]: "0",
+    [GlobalParam.OPERATOR]: "",
+    [GlobalParam.EXPRESSION2]: "",
     [GlobalParam.HISTORY]: ["4+4", "2*2"]
   }
 });
