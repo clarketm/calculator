@@ -10,10 +10,12 @@ import { stringToExpression } from "../utils/helpers";
 import {
   selectExpression,
   selectHistory,
-  selectIsDirty
+  selectIsDirty,
+  selectIsEvaluated
 } from "../api/global/globalSelectors";
 import {
   toggleIsDirtyAsync,
+  toggleIsEvaluatedAsync,
   updateExpressionAsync,
   updateHistoryAsync
 } from "../api/global/globalActions";
@@ -31,7 +33,12 @@ class Calculator extends React.Component {
   };
 
   operand = (expression, key) => {
-    if (Number.parseInt(expression, 10) === 0 && expression.length === 1) {
+    if (this.props.isEvaluated) {
+      return key.toString();
+    } else if (
+      Number.parseInt(expression, 10) === 0 &&
+      expression.length === 1
+    ) {
       return key.toString();
     } else {
       return `${expression}${key}`;
@@ -71,15 +78,35 @@ class Calculator extends React.Component {
   };
 
   percent = expression => {
-    return (Number.parseInt(expression, 10) / 100).toString();
+    if (Number.isInteger(expression / 100)) {
+      return Number.parseInt(expression / 100, 10).toString();
+    } else {
+      let result = Number.parseFloat(expression / 100).toString();
+      if (result.length > 8) {
+        return result.slice(0, 8);
+      } else {
+        return result;
+      }
+    }
   };
 
   negate = expression => {
-    return (Number.parseInt(expression, 10) * -1).toString();
+    if (Number.isInteger(expression * -1)) {
+      return Number.parseInt(expression * -1, 10).toString();
+    } else {
+      let result = Number.parseFloat(expression * -1).toString();
+      if (result.length > 8) {
+        return result.slice(0, 8);
+      } else {
+        return result;
+      }
+    }
   };
 
   decimal = expression => {
-    if (expression.includes(".")) {
+    if (this.props.isEvaluated) {
+      return "0.";
+    } else if (expression.includes(".")) {
       return expression.toString();
     } else {
       return `${expression}.`;
@@ -97,35 +124,42 @@ class Calculator extends React.Component {
 
   handlePress = (key, type) => {
     let { expression } = this.props;
-    let _expression, isDirty;
+    let _expression, isDirty, isEvaluated;
 
     switch (type) {
       case KeyType.CLEAR:
         isDirty = false;
+        isEvaluated = false;
         _expression = this.clear();
         break;
       case KeyType.EQUALS:
         isDirty = true;
+        isEvaluated = true;
         _expression = this.equals(expression);
         break;
       case KeyType.PERCENT:
         isDirty = true;
+        isEvaluated = false;
         _expression = this.percent(expression);
         break;
       case KeyType.NEGATE:
         isDirty = true;
+        isEvaluated = false;
         _expression = this.negate(expression);
         break;
       case KeyType.DECIMAL:
         isDirty = true;
+        isEvaluated = false;
         _expression = this.decimal(expression);
         break;
       case KeyType.OPERATOR:
         isDirty = true;
+        isEvaluated = false;
         _expression = this.operator(expression, key);
         break;
       case KeyType.OPERAND:
         isDirty = true;
+        isEvaluated = false;
         _expression = this.operand(expression, key);
         break;
     }
@@ -133,6 +167,7 @@ class Calculator extends React.Component {
     this.props
       .updateExpression(_expression)
       .then(() => this.props.toggleIsDirty(isDirty))
+      .then(() => this.props.toggleIsEvaluated(isEvaluated))
       .then(() => this.scrollView.scrollToEnd({ animated: false }));
   };
 
@@ -166,11 +201,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   expression: selectExpression(state),
   history: selectHistory(state),
-  isDirty: selectIsDirty(state)
+  isDirty: selectIsDirty(state),
+  isEvaluated: selectIsEvaluated(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-  toggleIsDirty: dirty => dispatch(toggleIsDirtyAsync(dirty)),
+  toggleIsDirty: isDirty => dispatch(toggleIsDirtyAsync(isDirty)),
+  toggleIsEvaluated: isEvaluated =>
+    dispatch(toggleIsEvaluatedAsync(isEvaluated)),
   updateExpression: expression => dispatch(updateExpressionAsync(expression)),
   updateHistory: history => dispatch(updateHistoryAsync(history))
 });

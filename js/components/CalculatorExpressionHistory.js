@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { Button, ScrollView, StyleSheet, View } from "react-native";
 import { HistoryEntry } from "./HistoryEntry";
 import { expressionToString } from "../utils/helpers";
 
@@ -13,7 +13,7 @@ export class CalculatorExpressionHistory extends Component {
           <Button color="#fff" onPress={handleClear} title="clear" />
         </View>
 
-        <View style={styles.historyContainer}>
+        <ScrollView horizontal contentContainerStyle={styles.scroll}>
           {history.map((historyItem, index) => {
             let item = expressionToString(historyItem);
             return (
@@ -26,7 +26,7 @@ export class CalculatorExpressionHistory extends Component {
               </HistoryEntry>
             );
           })}
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -40,7 +40,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#EE9A35"
   },
-  historyContainer: {
-    flexDirection: "row"
+  scroll: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end"
   }
 });

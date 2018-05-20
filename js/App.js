@@ -8,9 +8,10 @@ import { GlobalParam } from "./api/global/globalConstants";
 
 const initialState = fromJS({
   [ReducerKey.GLOBAL]: {
+    [GlobalParam.IS_EVALUATED]: false,
     [GlobalParam.IS_DIRTY]: false,
     [GlobalParam.EXPRESSION]: "0",
-    [GlobalParam.HISTORY]: []
+    [GlobalParam.HISTORY]: ["4+4", "2*2"]
   }
 });
 
