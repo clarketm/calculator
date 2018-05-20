@@ -60,7 +60,7 @@ class Calculator extends Component {
   };
 
   handleHistoryPress = (expression, index) => {
-    this.props.updateExpression1(eval(stringToExpression(expression)));
+    this.props.updateExpression1(eval(stringToExpression(expression))); // eslint-disable-line
     this.props.updateHistory(this.props.history.splice(index, 1));
   };
 
@@ -88,10 +88,8 @@ class Calculator extends Component {
         if (expression2 === "0" && !operator) return;
 
         let fullExp = `${expression1}${operator}${expression2}`;
+        _expression = truncateByEvaluation(eval(stringToExpression(fullExp))); // eslint-disable-line
 
-        let _expression = truncateByEvaluation(
-          eval(stringToExpression(fullExp))
-        );
         return Promise.all([
           this.props.updateOperator(null),
           this.props.toggleIsDirty(true),
