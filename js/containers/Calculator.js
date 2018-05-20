@@ -37,6 +37,10 @@ class Calculator extends Component {
     }
   };
 
+  equal = expression => {
+    return truncateByEvaluation(eval(stringToExpression(expression))); // eslint-disable-line
+  };
+
   percent = expression => {
     return truncateByEvaluation(expression / 100);
   };
@@ -72,10 +76,11 @@ class Calculator extends Component {
       case KeyType.CLEAR:
         return Promise.all([
           this.props.updateOperator(null),
-          this.props.toggleIsDirty(false),
           this.props.updateExpression1("0"),
           this.props.updateExpression2("0"),
-          this.props.toggleIsEvaluated(false)
+          this.props.toggleIsDirty(false),
+          this.props.toggleIsEvaluated(false),
+          this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.OPERATOR:
         return Promise.all([
@@ -85,19 +90,19 @@ class Calculator extends Component {
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.EQUALS:
-        if (expression2 === "0" && !operator) return;
+        if (!operator) return;
 
         let fullExp = `${expression1}${operator}${expression2}`;
-        _expression = truncateByEvaluation(eval(stringToExpression(fullExp))); // eslint-disable-line
+        _expression = this.equal(fullExp);
 
         return Promise.all([
           this.props.updateOperator(null),
-          this.props.toggleIsDirty(true),
           this.props.updateExpression1(_expression),
           this.props.updateExpression2("0"),
+          this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(true),
-          this.scrollView.scrollToEnd({ animated: false }),
-          this.props.updateHistory(history.push(fullExp))
+          this.props.updateHistory(history.push(fullExp)),
+          this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.PERCENT:
         _expression = this.percent(operator ? expression2 : expression1);
@@ -140,8 +145,6 @@ class Calculator extends Component {
           this.scrollView.scrollToEnd({ animated: false })
         ]);
     }
-
-    // .then(() => this.scrollView.scrollToEnd({animated: false}));
   };
 
   render() {
