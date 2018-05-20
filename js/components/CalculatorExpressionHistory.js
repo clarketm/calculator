@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, StyleSheet, View } from "react-native";
 import { HistoryEntry } from "./HistoryEntry";
-import { expressionToString } from "../constants";
+import { expressionToString } from "../utils/helpers";
 
 export class CalculatorExpressionHistory extends Component {
   render() {
@@ -9,12 +9,12 @@ export class CalculatorExpressionHistory extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.button}>
-          <Button onPress={handleClear} title="clear" />
+        <View>
+          <Button color="#fff" onPress={handleClear} title="clear" />
         </View>
 
         <View style={styles.historyContainer}>
-          {[...history].map((historyItem, index) => {
+          {history.map((historyItem, index) => {
             let item = expressionToString(historyItem);
             return (
               <HistoryEntry
@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#EE9A35"
   },
-  button: {},
   historyContainer: {
     flexDirection: "row"
   }

@@ -1,4 +1,4 @@
-import { AppRegistry } from 'react-native';
-import {Calculator} from './js/Calculator';
+import { AppRegistry } from "react-native";
+import App from "./js/App";
 
-AppRegistry.registerComponent('calculator', () => Calculator);
+AppRegistry.registerComponent("calculator", () => App);

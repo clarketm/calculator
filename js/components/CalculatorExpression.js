@@ -27,15 +27,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#000"
   },
   scroll: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
     padding: 15
-    // paddingLeft: 40,
-    // paddingRight: 40,
-    // alignItems: 'flex-end',
-    // justifyContent: 'flex-end',
   },
   text: {
     fontSize: 70,
-    // padding: 15,
     fontWeight: "200",
     color: "#fff"
   }

@@ -1,3 +1,7 @@
+export const ReducerKey = {
+  GLOBAL: "global"
+};
+
 export const KeyType = {
   OPERATOR: "operator",
   OPERAND: "operand",
@@ -6,14 +10,6 @@ export const KeyType = {
   PERCENT: "percent",
   NEGATE: "negate",
   DECIMAL: "decimal"
-};
-
-export const stringToExpression = string => {
-  return string.replace("÷", "/").replace("×", "*");
-};
-
-export const expressionToString = expression => {
-  return expression.replace("/", "÷").replace("*", "×");
 };
 
 export const Keys = [

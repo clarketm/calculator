@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { CalculatorKey } from "./CalculatorKey";
-import { Keys } from "../constants";
+import { Keys } from "../utils/constants";
 
 export class CalculatorKeys extends Component {
   render() {

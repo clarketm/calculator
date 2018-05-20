@@ -1,13 +1,14 @@
 {
-  "name": "calculator",
+  "name": "@clarketm/calculator",
   "version": "0.1.0",
-  "private": true,
+  "description": "React Native calculator",
   "scripts": {
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint --fix ./js",
     "prettier": "prettier --write './js/*.{js,css,md}'",
+    "prep": "yarn lint && yarn prettier && yarn test",
     "test": "jest"
   },
   "husky": {
@@ -26,17 +27,45 @@
     "email": "travis.m.clarke@gmail.com",
     "url": "https://www.travismclarke.com/"
   },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clarketm/calculator/issues"
+  },
+  "homepage": "https://github.com/clarketm/calculator#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clarketm/calculator.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "calculator"
+  ],
   "jest": {
     "preset": "react-native"
   },
   "dependencies": {
+    "immutable": "^3.8.2",
+    "lodash": "^4.17.10",
     "react": "^16.3.2",
     "react-native": "~0.55.2",
     "react-native-elements": "^0.19.1",
     "react-native-vector-icons": "^4.6.0",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-immutable": "^4.0.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "@types/node": "^10.1.2",
+    "@types/react": "^16.3.14",
+    "@types/react-test-renderer": "^16.0.1",
     "babel-eslint": "^8.2.3",
     "babel-preset-react-native-stage-0": "^1.0.1",
     "eslint": "^4.19.1",

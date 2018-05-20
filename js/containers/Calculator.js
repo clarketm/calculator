@@ -1,18 +1,19 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { CalculatorKeys } from "./components/CalculatorKeys";
-import { CalculatorHeader } from "./components/CalculatorHeader";
-import { CalculatorExpression } from "./components/CalculatorExpression";
-import { CalculatorExpressionHistory } from "./components/CalculatorExpressionHistory";
-import { KeyType, stringToExpression } from "./constants";
+import { connect } from "react-redux";
+import { CalculatorKeys } from "../components/CalculatorKeys";
+import { CalculatorHeader } from "../components/CalculatorHeader";
+import { CalculatorExpression } from "../components/CalculatorExpression";
+import { CalculatorExpressionHistory } from "../components/CalculatorExpressionHistory";
+import { KeyType } from "../utils/constants";
+import { stringToExpression } from "../utils/helpers";
+import { selectExpression, selectHistory } from "../api/global/globalSelectors";
+import {
+  updateExpressionAsync,
+  updateHistoryAsync
+} from "../api/global/globalActions";
 
-export class Calculator extends React.Component {
-  state = {
-    expression: "0",
-    expressionStack: [],
-    history: []
-  };
-
+class Calculator extends React.Component {
   operator = (expression, key) => {
     if (
       expression.length > 0 &&
@@ -47,10 +48,8 @@ export class Calculator extends React.Component {
     }
 
     let _expression = stringToExpression(expression);
-    this.setState(({ history }) => {
-      history.push(_expression);
-      return { history };
-    });
+
+    this.props.updateHistory(this.props.history.push(_expression));
 
     let result = eval(_expression); // eslint-disable-line
 
@@ -83,22 +82,16 @@ export class Calculator extends React.Component {
   };
 
   handleClearHistory = () => {
-    this.setState({ history: [] });
+    this.props.updateHistory(this.props.history.clear());
   };
 
   handleHistoryPress = (expression, index) => {
-    let _history = this.state.history;
-
-    _history.splice(index, 1);
-
-    this.setState({
-      expression: expression.toString(),
-      history: _history
-    });
+    this.props.updateExpression(expression.toString());
+    this.props.updateHistory(this.props.history.splice(index, 1));
   };
 
   handlePress = (key, type) => {
-    let { expression } = this.state;
+    let { expression } = this.props;
     let _expression;
 
     switch (type) {
@@ -125,16 +118,13 @@ export class Calculator extends React.Component {
         break;
     }
 
-    this.setState(
-      {
-        expression: _expression
-      },
-      () => this.scrollView.scrollToEnd({ animated: false })
-    );
+    this.props
+      .updateExpression(_expression)
+      .then(() => this.scrollView.scrollToEnd({ animated: false }));
   };
 
   render() {
-    const { expression, history } = this.state;
+    const { expression, history } = this.props;
 
     return (
       <View style={styles.container}>
@@ -159,3 +149,15 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
+const mapStateToProps = state => ({
+  expression: selectExpression(state),
+  history: selectHistory(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+  updateExpression: expression => dispatch(updateExpressionAsync(expression)),
+  updateHistory: history => dispatch(updateHistoryAsync(history))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Calculator);
