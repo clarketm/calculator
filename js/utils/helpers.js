@@ -1,4 +1,4 @@
-import { is } from "immutable";
+import { is, Iterable } from "immutable";
 import { createSelectorCreator, defaultMemoize } from "reselect";
 
 export const stringToExpression = string => {
@@ -6,6 +6,10 @@ export const stringToExpression = string => {
 };
 export const expressionToString = expression => {
   return expression.replace("/", "÷").replace("*", "×");
+};
+
+export const ensureMutable = state => {
+  return Iterable.isIterable(state) ? state.toJS() : state;
 };
 
 export const createImmutableSelector = createSelectorCreator(
