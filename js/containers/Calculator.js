@@ -139,17 +139,17 @@ class Calculator extends React.Component {
         break;
       case KeyType.PERCENT:
         isDirty = true;
-        isEvaluated = false;
+        isEvaluated = true;
         _expression = this.percent(expression);
         break;
       case KeyType.NEGATE:
         isDirty = true;
-        isEvaluated = false;
+        isEvaluated = true;
         _expression = this.negate(expression);
         break;
       case KeyType.DECIMAL:
         isDirty = true;
-        isEvaluated = false;
+        isEvaluated = true;
         _expression = this.decimal(expression);
         break;
       case KeyType.OPERATOR:
