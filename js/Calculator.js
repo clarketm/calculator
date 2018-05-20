@@ -4,7 +4,7 @@ import { CalculatorKeys } from './components/CalculatorKeys';
 import { CalculatorHeader } from './components/CalculatorHeader';
 import { CalculatorExpression } from './components/CalculatorExpression';
 import { CalculatorExpressionHistory } from './components/CalculatorExpressionHistory';
-import { KeyType } from './constants';
+import { KeyType, stringToExpression, expressionToString } from './constants';
 
 export class Calculator extends React.Component {
 
@@ -12,12 +12,6 @@ export class Calculator extends React.Component {
     expression: '0',
     expressionStack: [],
     history: []
-  };
-
-  clearHistory = () => {
-    this.setState({
-      history: []
-    })
   };
 
   operator = (expression, key) => {
@@ -41,7 +35,7 @@ export class Calculator extends React.Component {
   };
 
   equals = (expression) => {
-    let _expression = expression.replace('÷', '/').replace('×', '*');
+    let _expression = stringToExpression(expression);
     this.setState(({history}) => {
       history.push(_expression);
       return {history};
@@ -63,6 +57,21 @@ export class Calculator extends React.Component {
     } else {
       return `${expression}.`;
     }
+  };
+
+  handleClearHistory = () => {
+    this.setState({history: []})
+  };
+
+  handleHistoryPress = (expression, index) => {
+    let _history = this.state.history;
+
+    _history.splice(index, 1);
+
+    this.setState({
+      expression,
+      history: _history
+    })
   };
 
   handlePress = (key, type) => {
@@ -105,7 +114,11 @@ export class Calculator extends React.Component {
       <View style={styles.container}>
         <CalculatorHeader />
         <CalculatorExpression expression={expression} />
-        <CalculatorExpressionHistory history={history} handlePress={this.clearHistory} />
+        <CalculatorExpressionHistory
+          history={history}
+          handleClear={this.handleClearHistory}
+          handleHistoryPress={this.handleHistoryPress}
+        />
         <CalculatorKeys handlePress={this.handlePress} />
       </View>
     );

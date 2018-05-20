@@ -8,6 +8,14 @@ export const KeyType = {
   DECIMAL: 'decimal',
 };
 
+export const stringToExpression = (string) => {
+  return string.replace('÷', '/').replace('×', '*');
+};
+
+export const expressionToString = (expression) => {
+  return expression.replace('/', '÷').replace('*', '×');
+};
+
 export const Keys = [
   [
     {text: 'ac', type: KeyType.CLEAR, color: '#A5A5A5'},

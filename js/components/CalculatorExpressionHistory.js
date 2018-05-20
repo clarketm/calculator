@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import { HistoryEntry } from './HistoryEntry';
+import { expressionToString } from '../constants';
 
 export class CalculatorExpressionHistory extends Component {
   render () {
-    const {history, handlePress} = this.props;
+    const {history, handleClear, handleHistoryPress} = this.props;
 
     return (
       <View style={styles.container}>
         <View style={styles.button}>
           <Button
-            onPress={handlePress}
-            title="Clear"
+            onPress={handleClear}
+            title="clear"
           />
         </View>
 
+
         <View style={styles.historyContainer}>
-          {history.map(h => {
+          {history.map((historyItem, index) => {
+            let item = expressionToString(historyItem);
             return (
-              <Text key={h} style={styles.text}>{h}</Text>
+              <HistoryEntry key={item} index={index} handlePress={handleHistoryPress}>{item}</HistoryEntry>
             );
           })}
         </View>
@@ -38,14 +42,5 @@ const styles = StyleSheet.create({
   },
   historyContainer: {
     flexDirection: 'row',
-  },
-  text: {
-    fontSize: 15,
-    padding: 5,
-    marginRight: 10,
-    borderRadius: 60,
-    fontWeight: '200',
-    color: '#fff',
-    backgroundColor: '#b77628'
   },
 });
