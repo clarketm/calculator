@@ -4,11 +4,13 @@ import { Provider } from "react-redux";
 import { fromJS } from "immutable";
 import { ReducerKey } from "./utils/constants";
 import configureStore from "./store/configureStore";
+import { GlobalParam } from "./api/global/globalConstants";
 
 const initialState = fromJS({
   [ReducerKey.GLOBAL]: {
-    expression: "0",
-    history: []
+    [GlobalParam.IS_DIRTY]: false,
+    [GlobalParam.EXPRESSION]: "0",
+    [GlobalParam.HISTORY]: []
   }
 });
 

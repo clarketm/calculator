@@ -5,7 +5,7 @@ import { Keys } from "../utils/constants";
 
 export class CalculatorKeys extends Component {
   render() {
-    const { handlePress } = this.props;
+    const { handlePress, isDirty } = this.props;
 
     return (
       <View style={styles.container}>
@@ -17,8 +17,11 @@ export class CalculatorKeys extends Component {
                   <CalculatorKey
                     key={key.text}
                     text={key.text}
+                    textDirty={key.textDirty || key.text}
                     type={key.type}
                     color={key.color}
+                    style={key.style}
+                    isDirty={isDirty}
                     handlePress={handlePress}
                   />
                 );

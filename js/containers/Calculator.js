@@ -7,8 +7,13 @@ import { CalculatorExpression } from "../components/CalculatorExpression";
 import { CalculatorExpressionHistory } from "../components/CalculatorExpressionHistory";
 import { KeyType } from "../utils/constants";
 import { stringToExpression } from "../utils/helpers";
-import { selectExpression, selectHistory } from "../api/global/globalSelectors";
 import {
+  selectExpression,
+  selectHistory,
+  selectIsDirty
+} from "../api/global/globalSelectors";
+import {
+  toggleIsDirtyAsync,
   updateExpressionAsync,
   updateHistoryAsync
 } from "../api/global/globalActions";
@@ -92,39 +97,47 @@ class Calculator extends React.Component {
 
   handlePress = (key, type) => {
     let { expression } = this.props;
-    let _expression;
+    let _expression, isDirty;
 
     switch (type) {
       case KeyType.CLEAR:
+        isDirty = false;
         _expression = this.clear();
         break;
       case KeyType.EQUALS:
+        isDirty = true;
         _expression = this.equals(expression);
         break;
       case KeyType.PERCENT:
+        isDirty = true;
         _expression = this.percent(expression);
         break;
       case KeyType.NEGATE:
+        isDirty = true;
         _expression = this.negate(expression);
         break;
       case KeyType.DECIMAL:
+        isDirty = true;
         _expression = this.decimal(expression);
         break;
       case KeyType.OPERATOR:
+        isDirty = true;
         _expression = this.operator(expression, key);
         break;
       case KeyType.OPERAND:
+        isDirty = true;
         _expression = this.operand(expression, key);
         break;
     }
 
     this.props
       .updateExpression(_expression)
+      .then(() => this.props.toggleIsDirty(isDirty))
       .then(() => this.scrollView.scrollToEnd({ animated: false }));
   };
 
   render() {
-    const { expression, history } = this.props;
+    const { expression, history, isDirty } = this.props;
 
     return (
       <View style={styles.container}>
@@ -138,7 +151,7 @@ class Calculator extends React.Component {
           handleClear={this.handleClearHistory}
           handleHistoryPress={this.handleHistoryPress}
         />
-        <CalculatorKeys handlePress={this.handlePress} />
+        <CalculatorKeys isDirty={isDirty} handlePress={this.handlePress} />
       </View>
     );
   }
@@ -152,10 +165,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   expression: selectExpression(state),
-  history: selectHistory(state)
+  history: selectHistory(state),
+  isDirty: selectIsDirty(state)
 });
 
 const mapDispatchToProps = dispatch => ({
+  toggleIsDirty: dirty => dispatch(toggleIsDirtyAsync(dirty)),
   updateExpression: expression => dispatch(updateExpressionAsync(expression)),
   updateHistory: history => dispatch(updateHistoryAsync(history))
 });

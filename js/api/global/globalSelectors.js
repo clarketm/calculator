@@ -11,3 +11,7 @@ export const selectExpression = createImmutableSelector(__selectGlobal, state =>
 export const selectHistory = createImmutableSelector(__selectGlobal, state =>
   state.get(GlobalParam.HISTORY)
 );
+
+export const selectIsDirty = createImmutableSelector(__selectGlobal, state =>
+  state.get(GlobalParam.IS_DIRTY)
+);
