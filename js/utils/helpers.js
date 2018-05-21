@@ -1,5 +1,6 @@
 import { is, Iterable } from "immutable";
 import { createSelectorCreator, defaultMemoize } from "reselect";
+import { Orientation } from "./constants";
 
 export const stringToExpression = string => {
   return string.replace("÷", "/").replace("×", "*");
@@ -36,6 +37,14 @@ export const truncateByEvaluation = evaluation => {
     } else {
       return result;
     }
+  }
+};
+
+export const dynamicFontSize = (orientation, fontSize) => {
+  if (orientation === Orientation.PORTRAIT) {
+    return { fontSize };
+  } else {
+    return { fontSize: fontSize / 2 };
   }
 };
 

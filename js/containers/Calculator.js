@@ -156,21 +156,34 @@ class Calculator extends Component {
   };
 
   render() {
-    const { expression1, expression2, operator, history, isDirty } = this.props;
+    const {
+      expression1,
+      expression2,
+      orientation,
+      operator,
+      history,
+      isDirty
+    } = this.props;
 
     return (
       <View style={styles.container} onLayout={this.handleLayout}>
         <CalculatorHeader />
         <CalculatorExpression
+          orientation={orientation}
           expression={operator ? expression2 : expression1}
           scrollViewRef={ref => (this.scrollView = ref)}
         />
         <CalculatorExpressionHistory
+          orientation={orientation}
           history={history}
           handleClear={this.handleClearHistory}
           handleHistoryPress={this.handleHistoryPress}
         />
-        <CalculatorKeys isDirty={isDirty} handlePress={this.handlePress} />
+        <CalculatorKeys
+          orientation={orientation}
+          isDirty={isDirty}
+          handlePress={this.handlePress}
+        />
       </View>
     );
   }
