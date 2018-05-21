@@ -20,7 +20,7 @@ export class CalculatorKey extends Component {
         style={[styles.container, style, { backgroundColor: color }]}
         onPress={() => handlePress(text, type)}
       >
-        <Text style={[styles.key, dynamicFontSize(orientation, 40)]}>
+        <Text style={[styles.key, dynamicFontSize(orientation, 35)]}>
           {isDirty ? textDirty : text}
         </Text>
       </TouchableHighlight>

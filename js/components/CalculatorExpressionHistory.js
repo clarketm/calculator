@@ -48,9 +48,9 @@ export class CalculatorExpressionHistory extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.75,
-    paddingLeft: 5,
-    paddingRight: 5,
+    flex: 0.85,
+    paddingLeft: 10,
+    paddingRight: 10,
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",

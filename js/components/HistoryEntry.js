@@ -11,7 +11,7 @@ export class HistoryEntry extends Component {
         style={styles.container}
         onPress={() => handlePress(children, index)}
       >
-        <Text style={[styles.historyItem, dynamicFontSize(orientation, 15)]}>
+        <Text style={[styles.historyItem, dynamicFontSize(orientation, 20)]}>
           {children}
         </Text>
       </TouchableHighlight>
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   historyItem: {
     padding: 5,
     borderRadius: 60,
-    fontWeight: "200",
+    fontWeight: "300",
     color: "#fff",
     backgroundColor: "#b77628"
   }

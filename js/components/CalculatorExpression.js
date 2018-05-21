@@ -24,7 +24,7 @@ export class CalculatorExpression extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 2.2,
     justifyContent: "center",
     alignItems: "flex-end",
     backgroundColor: "#000"
