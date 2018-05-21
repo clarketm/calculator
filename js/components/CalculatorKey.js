@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 60,
+    flexShrink: 1,
+    borderRadius: 50,
     margin: 5
   },
   key: {

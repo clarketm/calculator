@@ -5,7 +5,12 @@ import { CalculatorKeys } from "../components/CalculatorKeys";
 import { CalculatorHeader } from "../components/CalculatorHeader";
 import { CalculatorExpression } from "../components/CalculatorExpression";
 import { CalculatorExpressionHistory } from "../components/CalculatorExpressionHistory";
-import { Expression, KeyType } from "../utils/constants";
+import {
+  Expression,
+  KeyType,
+  Orientation,
+  ORIENTATION
+} from "../utils/constants";
 import {
   isZero,
   stringToExpression,
@@ -17,9 +22,11 @@ import {
   selectHistory,
   selectIsDirty,
   selectIsEvaluated,
-  selectOperator
+  selectOperator,
+  selectOrientation
 } from "../api/global/globalSelectors";
 import {
+  setOrientationAsync,
   toggleIsDirtyAsync,
   toggleIsEvaluatedAsync,
   updateExpression1Async,
@@ -57,6 +64,12 @@ class Calculator extends Component {
     } else {
       return `${expression}.`;
     }
+  };
+
+  handleLayout = ({ width, height }) => {
+    const _orientation =
+      width > height ? Orientation.LANDSCAPE : Orientation.PORTRAIT;
+    this.props.setOrientation(_orientation);
   };
 
   handleClearHistory = () => {
@@ -148,10 +161,17 @@ class Calculator extends Component {
   };
 
   render() {
-    const { expression1, expression2, operator, history, isDirty } = this.props;
+    const {
+      expression1,
+      expression2,
+      operator,
+      history,
+      isDirty,
+      orientation
+    } = this.props;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={this.handleLayout}>
         <CalculatorHeader />
         <CalculatorExpression
           expression={operator ? expression2 : expression1}
@@ -180,10 +200,12 @@ const mapStateToProps = state => ({
   operator: selectOperator(state),
   history: selectHistory(state),
   isDirty: selectIsDirty(state),
-  isEvaluated: selectIsEvaluated(state)
+  isEvaluated: selectIsEvaluated(state),
+  orientation: selectOrientation(state)
 });
 
 const mapDispatchToProps = dispatch => ({
+  setOrientation: orientation => dispatch(setOrientationAsync(orientation)),
   toggleIsDirty: isDirty => dispatch(toggleIsDirtyAsync(isDirty)),
   toggleIsEvaluated: isEvaluated =>
     dispatch(toggleIsEvaluatedAsync(isEvaluated)),

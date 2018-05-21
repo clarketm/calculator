@@ -1,6 +1,7 @@
 import { Map } from "immutable";
 import {
   GlobalParam,
+  SET_ORIENTATION,
   TOGGLE_IS_DIRTY,
   TOGGLE_IS_EVALUATED,
   UPDATE_EXPRESSION1,
@@ -11,6 +12,12 @@ import {
 
 const globalReducer = (state = Map(), action) => {
   switch (action.type) {
+    case SET_ORIENTATION:
+      return state.set(
+        GlobalParam.ORIENTATION,
+        action[GlobalParam.ORIENTATION]
+      );
+
     case TOGGLE_IS_DIRTY:
       return state.set(GlobalParam.IS_DIRTY, action[GlobalParam.IS_DIRTY]);
 

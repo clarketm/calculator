@@ -22,6 +22,11 @@ export const selectHistory = createImmutableSelector(__selectGlobal, state =>
   state.get(GlobalParam.HISTORY)
 );
 
+export const selectOrientation = createImmutableSelector(
+  __selectGlobal,
+  state => state.get(GlobalParam.ORIENTATION)
+);
+
 export const selectIsDirty = createImmutableSelector(__selectGlobal, state =>
   state.get(GlobalParam.IS_DIRTY)
 );

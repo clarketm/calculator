@@ -4,9 +4,20 @@ import {
   UPDATE_EXPRESSION1,
   UPDATE_EXPRESSION2,
   UPDATE_HISTORY,
-  UPDATE_OPERATOR
+  UPDATE_OPERATOR,
+  SET_ORIENTATION
 } from "./globalConstants";
 
+export const setOrientation = orientation => ({
+  type: SET_ORIENTATION,
+  orientation
+});
+
+export const setOrientationAsync = orientation => {
+  return async dispatch => {
+    return await dispatch(setOrientation(orientation));
+  };
+};
 export const toggleIsDirty = isDirty => ({
   type: TOGGLE_IS_DIRTY,
   isDirty

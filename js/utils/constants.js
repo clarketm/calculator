@@ -2,6 +2,11 @@ export const ReducerKey = {
   GLOBAL: "global"
 };
 
+export const Orientation = {
+  PORTRAIT: "portrait",
+  LANDSCAPE: "landscape"
+};
+
 export const PrimitiveType = {
   BOOLEAN: "boolean",
   FUNCTION: "function",
