@@ -5,12 +5,7 @@ import { CalculatorKeys } from "../components/CalculatorKeys";
 import { CalculatorHeader } from "../components/CalculatorHeader";
 import { CalculatorExpression } from "../components/CalculatorExpression";
 import { CalculatorExpressionHistory } from "../components/CalculatorExpressionHistory";
-import {
-  Expression,
-  KeyType,
-  Orientation,
-  ORIENTATION
-} from "../utils/constants";
+import { Expression, KeyType, Orientation } from "../utils/constants";
 import {
   isZero,
   stringToExpression,
@@ -161,14 +156,7 @@ class Calculator extends Component {
   };
 
   render() {
-    const {
-      expression1,
-      expression2,
-      operator,
-      history,
-      isDirty,
-      orientation
-    } = this.props;
+    const { expression1, expression2, operator, history, isDirty } = this.props;
 
     return (
       <View style={styles.container} onLayout={this.handleLayout}>
