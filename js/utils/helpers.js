@@ -40,11 +40,11 @@ export const truncateByEvaluation = evaluation => {
   }
 };
 
-export const dynamicFontSize = (orientation, fontSize) => {
+export const dynamicFontSize = (orientation, fontSize, ratio = 2) => {
   if (orientation === Orientation.PORTRAIT) {
     return { fontSize };
   } else {
-    return { fontSize: fontSize / 2 };
+    return { fontSize: fontSize / ratio };
   }
 };
 

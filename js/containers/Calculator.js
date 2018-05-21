@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { connect } from "react-redux";
 import { CalculatorKeys } from "../components/CalculatorKeys";
-import { CalculatorHeader } from "../components/CalculatorHeader";
 import { CalculatorExpression } from "../components/CalculatorExpression";
 import { CalculatorExpressionHistory } from "../components/CalculatorExpressionHistory";
 import { Expression, KeyType, Orientation } from "../utils/constants";
@@ -61,7 +60,11 @@ class Calculator extends Component {
     }
   };
 
-  handleLayout = ({ width, height }) => {
+  handleLayout = ({
+    nativeEvent: {
+      layout: { width, height }
+    }
+  }) => {
     const _orientation =
       width > height ? Orientation.LANDSCAPE : Orientation.PORTRAIT;
     this.props.setOrientation(_orientation);
@@ -167,7 +170,6 @@ class Calculator extends Component {
 
     return (
       <View style={styles.container} onLayout={this.handleLayout}>
-        <CalculatorHeader />
         <CalculatorExpression
           orientation={orientation}
           expression={operator ? expression2 : expression1}
@@ -191,7 +193,10 @@ class Calculator extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: "#000"
   }
 });
 

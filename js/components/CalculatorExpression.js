@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { dynamicFontSize } from "../utils/helpers";
 
 export class CalculatorExpression extends Component {
   render() {
-    const { expression, scrollViewRef } = this.props;
+    const { orientation, expression, scrollViewRef } = this.props;
 
     return (
       <View style={styles.container}>
@@ -12,7 +13,9 @@ export class CalculatorExpression extends Component {
           contentContainerStyle={styles.scroll}
           ref={scrollViewRef}
         >
-          <Text style={styles.text}>{expression}</Text>
+          <Text style={[styles.text, dynamicFontSize(orientation, 70)]}>
+            {expression}
+          </Text>
         </ScrollView>
       </View>
     );
@@ -21,7 +24,7 @@ export class CalculatorExpression extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1.5,
+    flex: 2,
     justifyContent: "center",
     alignItems: "flex-end",
     backgroundColor: "#000"
@@ -30,10 +33,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "flex-end",
+    alignItems: "flex-end",
     padding: 15
   },
   text: {
-    fontSize: 70,
     fontWeight: "200",
     color: "#fff"
   }

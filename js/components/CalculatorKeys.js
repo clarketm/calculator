@@ -5,7 +5,7 @@ import { Keys } from "../utils/constants";
 
 export class CalculatorKeys extends Component {
   render() {
-    const { handlePress, isDirty } = this.props;
+    const { handlePress, isDirty, orientation } = this.props;
 
     return (
       <View style={styles.container}>
@@ -23,6 +23,7 @@ export class CalculatorKeys extends Component {
                     style={key.style}
                     isDirty={isDirty}
                     handlePress={handlePress}
+                    orientation={orientation}
                   />
                 );
               })}
@@ -37,6 +38,7 @@ export class CalculatorKeys extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 6,
+    paddingTop: 5,
     alignItems: "stretch",
     backgroundColor: "#000"
   },

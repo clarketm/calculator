@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, TouchableHighlight } from "react-native";
+import { dynamicFontSize } from "../utils/helpers";
 
 export class CalculatorKey extends Component {
   render() {
@@ -10,7 +11,8 @@ export class CalculatorKey extends Component {
       textDirty,
       type,
       style,
-      handlePress
+      handlePress,
+      orientation
     } = this.props;
 
     return (
@@ -18,7 +20,9 @@ export class CalculatorKey extends Component {
         style={[styles.container, style, { backgroundColor: color }]}
         onPress={() => handlePress(text, type)}
       >
-        <Text style={styles.key}>{isDirty ? textDirty : text}</Text>
+        <Text style={[styles.key, dynamicFontSize(orientation, 40)]}>
+          {isDirty ? textDirty : text}
+        </Text>
       </TouchableHighlight>
     );
   }
@@ -34,6 +38,6 @@ const styles = StyleSheet.create({
   },
   key: {
     fontSize: 40,
-    color: "white"
+    color: "#fff"
   }
 });
