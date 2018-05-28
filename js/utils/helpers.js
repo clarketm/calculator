@@ -3,10 +3,11 @@ import { createSelectorCreator, defaultMemoize } from "reselect";
 import { Orientation } from "./constants";
 
 export const stringToExpression = string => {
-  return string.replace("÷", "/").replace("×", "*");
+  return string && string.replace("÷", "/").replace("×", "*");
 };
+
 export const expressionToString = expression => {
-  return expression.replace("/", "÷").replace("*", "×");
+  return expression && expression.replace("/", "÷").replace("*", "×");
 };
 
 export const endsWithOperator = expression => {

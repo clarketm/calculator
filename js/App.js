@@ -9,11 +9,13 @@ import { GlobalParam } from "./api/global/globalConstants";
 const initialState = fromJS({
   [ReducerKey.GLOBAL]: {
     [GlobalParam.ORIENTATION]: Orientation.PORTRAIT,
-    [GlobalParam.IS_EVALUATED]: false,
+    [GlobalParam.LAST_KEY]: null,
     [GlobalParam.IS_DIRTY]: false,
-    [GlobalParam.EXPRESSION1]: "0",
+    [GlobalParam.IS_EVALUATED]: false,
     [GlobalParam.OPERATOR]: "",
+    [GlobalParam.EXPRESSION1]: "0",
     [GlobalParam.EXPRESSION2]: "0",
+    [GlobalParam.RESULT]: "0",
     [GlobalParam.HISTORY]: []
   }
 });

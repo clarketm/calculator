@@ -14,6 +14,10 @@ export const selectExpression2 = createImmutableSelector(
   state => state.get(GlobalParam.EXPRESSION2)
 );
 
+export const selectResult = createImmutableSelector(__selectGlobal, state =>
+  state.get(GlobalParam.RESULT)
+);
+
 export const selectOperator = createImmutableSelector(__selectGlobal, state =>
   state.get(GlobalParam.OPERATOR)
 );
@@ -25,6 +29,10 @@ export const selectHistory = createImmutableSelector(__selectGlobal, state =>
 export const selectOrientation = createImmutableSelector(
   __selectGlobal,
   state => state.get(GlobalParam.ORIENTATION)
+);
+
+export const selectLastKey = createImmutableSelector(__selectGlobal, state =>
+  state.get(GlobalParam.LAST_KEY)
 );
 
 export const selectIsDirty = createImmutableSelector(__selectGlobal, state =>

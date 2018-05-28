@@ -16,22 +16,34 @@ import {
   selectHistory,
   selectIsDirty,
   selectIsEvaluated,
+  selectLastKey,
   selectOperator,
-  selectOrientation
+  selectOrientation,
+  selectResult
 } from "../api/global/globalSelectors";
 import {
+  setLastKeyAsync,
   setOrientationAsync,
   toggleIsDirtyAsync,
   toggleIsEvaluatedAsync,
   updateExpression1Async,
   updateExpression2Async,
   updateHistoryAsync,
-  updateOperatorAsync
+  updateOperatorAsync,
+  updateResultAsync
 } from "../api/global/globalActions";
 
 class Calculator extends Component {
-  operand = (expression, key, isDirty) => {
-    if (this.props.isEvaluated || isZero(expression) || isDirty) {
+  operand = (expression, key) => {
+    const isLastKeyEquals = this.props.lastKey === KeyType.EQUALS;
+    const isLastKeyOperator = this.props.lastKey === KeyType.OPERATOR;
+
+    if (
+      this.props.isEvaluated ||
+      isZero(expression) ||
+      isLastKeyEquals ||
+      isLastKeyOperator
+    ) {
       return `${key}`;
     } else {
       return `${expression}${key}`;
@@ -80,25 +92,8 @@ class Calculator extends Component {
   };
 
   handlePress = (key, type) => {
-    let { expression1, expression2, operator, history, isDirty } = this.props;
+    let { expression1, expression2, operator, history } = this.props;
     let expNum, _expression;
-
-    const evaluate = key => {
-      if (!operator) return;
-
-      let fullExp = `${expression1}${operator}${expression2}`;
-      _expression = this.equal(fullExp);
-
-      return Promise.all([
-        this.props.updateOperator(key),
-        this.props.updateExpression1(_expression),
-        this.props.updateExpression2(_expression),
-        this.props.toggleIsDirty(true),
-        this.props.toggleIsEvaluated(true),
-        this.props.updateHistory(history.push(fullExp)),
-        this.scrollView.scrollToEnd({ animated: false })
-      ]);
-    };
 
     switch (type) {
       case KeyType.CLEAR:
@@ -106,63 +101,110 @@ class Calculator extends Component {
           this.props.updateOperator(null),
           this.props.updateExpression1("0"),
           this.props.updateExpression2("0"),
+          this.props.updateResult(0),
+          this.props.setLastKey(KeyType.CLEAR),
           this.props.toggleIsDirty(false),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
+
       case KeyType.OPERATOR:
-        if (operator) return evaluate(key);
+        if (operator) {
+          let fullExp = `${expression1}${operator}${expression2}`;
+          _expression = this.equal(fullExp);
+
+          return Promise.all([
+            this.props.updateOperator(key),
+            this.props.updateExpression1(_expression),
+            // this.props.updateExpression2(_expression),
+            this.props.updateExpression2(expression2),
+            this.props.updateResult(_expression),
+            this.props.setLastKey(KeyType.OPERATOR),
+            this.props.toggleIsDirty(true),
+            this.props.toggleIsEvaluated(true),
+            this.props.updateHistory(history.push(fullExp)),
+            this.scrollView.scrollToEnd({ animated: false })
+          ]);
+        }
 
         return Promise.all([
           this.props.updateOperator(key),
           this.props.updateExpression2(expression1),
+          this.props.setLastKey(KeyType.OPERATOR),
           this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
+
       case KeyType.EQUALS:
-        return evaluate(null);
+        if (!operator) return;
+
+        let fullExp = `${expression1}${operator}${expression2}`;
+        _expression = this.equal(fullExp);
+
+        return Promise.all([
+          this.props.updateOperator(operator),
+          this.props.updateExpression1(_expression),
+          this.props.updateExpression2(expression2),
+          this.props.updateResult(_expression),
+          this.props.setLastKey(KeyType.EQUALS),
+          this.props.toggleIsDirty(true),
+          this.props.toggleIsEvaluated(true),
+          this.props.updateHistory(history.push(fullExp)),
+          this.scrollView.scrollToEnd({ animated: false })
+        ]);
 
       case KeyType.PERCENT:
         _expression = this.percent(operator ? expression2 : expression1);
+
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
+
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.setLastKey(KeyType.PERCENT),
           this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
+
       case KeyType.NEGATE:
         _expression = this.negate(operator ? expression2 : expression1);
+
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
+
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.setLastKey(KeyType.NEGATE),
           this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
+
       case KeyType.DECIMAL:
         _expression = this.decimal(operator ? expression2 : expression1);
+
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
+
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.setLastKey(KeyType.DECIMAL),
           this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
+
       case KeyType.OPERAND:
-        _expression = this.operand(
-          operator ? expression2 : expression1,
-          key,
-          isDirty
-        );
+        _expression = this.operand(operator ? expression2 : expression1, key);
+
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
+
         return Promise.all([
           this.props[expNum](_expression),
+          this.props.setLastKey(key),
           this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
@@ -175,6 +217,7 @@ class Calculator extends Component {
       expression1,
       expression2,
       orientation,
+      result,
       operator,
       history,
       isDirty
@@ -184,7 +227,7 @@ class Calculator extends Component {
       <View style={styles.container} onLayout={this.handleLayout}>
         <CalculatorExpression
           orientation={orientation}
-          expression={operator ? expression2 : expression1}
+          expression={result ? result : operator ? expression2 : expression1}
           scrollViewRef={ref => (this.scrollView = ref)}
         />
         <CalculatorExpressionHistory
@@ -215,8 +258,10 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   expression1: selectExpression1(state),
   expression2: selectExpression2(state),
+  result: selectResult(state),
   operator: selectOperator(state),
   history: selectHistory(state),
+  lastKey: selectLastKey(state),
   isDirty: selectIsDirty(state),
   isEvaluated: selectIsEvaluated(state),
   orientation: selectOrientation(state)
@@ -224,6 +269,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setOrientation: orientation => dispatch(setOrientationAsync(orientation)),
+  setLastKey: lastKey => dispatch(setLastKeyAsync(lastKey)),
   toggleIsDirty: isDirty => dispatch(toggleIsDirtyAsync(isDirty)),
   toggleIsEvaluated: isEvaluated =>
     dispatch(toggleIsEvaluatedAsync(isEvaluated)),
@@ -231,6 +277,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateExpression1Async(expression1)),
   updateExpression2: expression2 =>
     dispatch(updateExpression2Async(expression2)),
+  updateResult: result => dispatch(updateResultAsync(result)),
   updateOperator: operator => dispatch(updateOperatorAsync(operator)),
   updateHistory: history => dispatch(updateHistoryAsync(history))
 });

@@ -4,10 +4,12 @@ import {
   SET_ORIENTATION,
   TOGGLE_IS_DIRTY,
   TOGGLE_IS_EVALUATED,
+  TOGGLE_LAST_KEY,
   UPDATE_EXPRESSION1,
   UPDATE_EXPRESSION2,
   UPDATE_HISTORY,
-  UPDATE_OPERATOR
+  UPDATE_OPERATOR,
+  UPDATE_RESULT
 } from "./globalConstants";
 
 const globalReducer = (state = Map(), action) => {
@@ -17,6 +19,9 @@ const globalReducer = (state = Map(), action) => {
         GlobalParam.ORIENTATION,
         action[GlobalParam.ORIENTATION]
       );
+
+    case TOGGLE_LAST_KEY:
+      return state.set(GlobalParam.LAST_KEY, action[GlobalParam.LAST_KEY]);
 
     case TOGGLE_IS_DIRTY:
       return state.set(GlobalParam.IS_DIRTY, action[GlobalParam.IS_DIRTY]);
@@ -38,6 +43,9 @@ const globalReducer = (state = Map(), action) => {
         GlobalParam.EXPRESSION2,
         action[GlobalParam.EXPRESSION2]
       );
+
+    case UPDATE_RESULT:
+      return state.set(GlobalParam.RESULT, action[GlobalParam.RESULT]);
 
     case UPDATE_OPERATOR:
       return state.set(GlobalParam.OPERATOR, action[GlobalParam.OPERATOR]);

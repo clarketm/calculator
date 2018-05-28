@@ -5,7 +5,9 @@ import {
   UPDATE_EXPRESSION2,
   UPDATE_HISTORY,
   UPDATE_OPERATOR,
-  SET_ORIENTATION
+  SET_ORIENTATION,
+  TOGGLE_LAST_KEY,
+  UPDATE_RESULT
 } from "./globalConstants";
 
 export const setOrientation = orientation => ({
@@ -18,6 +20,18 @@ export const setOrientationAsync = orientation => {
     return await dispatch(setOrientation(orientation));
   };
 };
+
+export const setLastKey = lastKey => ({
+  type: TOGGLE_LAST_KEY,
+  lastKey
+});
+
+export const setLastKeyAsync = lastKey => {
+  return async dispatch => {
+    return await dispatch(setLastKey(lastKey));
+  };
+};
+
 export const toggleIsDirty = isDirty => ({
   type: TOGGLE_IS_DIRTY,
   isDirty
@@ -59,6 +73,17 @@ export const updateExpression2 = expression2 => ({
 export const updateExpression2Async = expression2 => {
   return async dispatch => {
     return await dispatch(updateExpression2(expression2));
+  };
+};
+
+export const updateResult = result => ({
+  type: UPDATE_RESULT,
+  result
+});
+
+export const updateResultAsync = result => {
+  return async dispatch => {
+    return await dispatch(updateResult(result));
   };
 };
 
