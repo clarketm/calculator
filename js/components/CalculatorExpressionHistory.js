@@ -1,22 +1,11 @@
 import React, { Component } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { HistoryEntry } from "./HistoryEntry";
 import { expressionToString } from "../utils/helpers";
 
 export class CalculatorExpressionHistory extends Component {
   render() {
-    const {
-      history,
-      orientation,
-      handleClear,
-      handleHistoryPress
-    } = this.props;
+    const { history, orientation, handleClear, handleHistoryPress } = this.props;
 
     return (
       <View style={styles.container}>

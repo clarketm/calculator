@@ -5,11 +5,7 @@ import { CalculatorKeys } from "../components/CalculatorKeys";
 import { CalculatorExpression } from "../components/CalculatorExpression";
 import { CalculatorExpressionHistory } from "../components/CalculatorExpressionHistory";
 import { Expression, KeyType, Orientation } from "../utils/constants";
-import {
-  isZero,
-  stringToExpression,
-  truncateByEvaluation
-} from "../utils/helpers";
+import { isZero, stringToExpression, truncateByEvaluation } from "../utils/helpers";
 import {
   selectExpression1,
   selectExpression2,
@@ -63,9 +59,6 @@ class Calculator extends Component {
   };
 
   decimal = expression => {
-    /*if (this.props.isEvaluated) {
-      return "0.";
-    } */
     if (expression.toString().includes(".")) {
       return `${expression}`;
     } else {
@@ -78,8 +71,7 @@ class Calculator extends Component {
       layout: { width, height }
     }
   }) => {
-    const _orientation =
-      width > height ? Orientation.LANDSCAPE : Orientation.PORTRAIT;
+    const _orientation = width > height ? Orientation.LANDSCAPE : Orientation.PORTRAIT;
     this.props.setOrientation(_orientation);
   };
 
@@ -99,21 +91,11 @@ class Calculator extends Component {
   };
 
   handlePress = (key, type) => {
-    let {
-      expression1,
-      expression2,
-      operator,
-      history,
-      lastKey,
-      isEvaluated,
-      result
-    } = this.props;
+    let { expression1, expression2, operator, history, lastKey, result } = this.props;
 
-    let showResult = isEvaluated && lastKey !== KeyType.OPERAND;
     let expNum, _expression, fullExp;
 
     const isLastKeyEquals = this.props.lastKey === KeyType.EQUALS;
-    // const isLastKeyOperator = this.props.lastKey === KeyType.OPERATOR;
 
     switch (type) {
       case KeyType.CLEAR:
@@ -135,7 +117,6 @@ class Calculator extends Component {
           return Promise.all([
             this.props.updateOperator(key),
             this.props.updateExpression2(/*result ? result : */ expression1),
-            // this.props.updateExpression2(expression1),
             this.props.setLastKey(KeyType.OPERATOR),
             this.props.toggleIsDirty(true),
             this.props.toggleIsEvaluated(false),
@@ -189,7 +170,7 @@ class Calculator extends Component {
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.PERCENT),
           this.props.toggleIsDirty(true),
-          this.props.toggleIsEvaluated(showResult),
+          this.props.toggleIsEvaluated(isLastKeyEquals),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
 
@@ -203,12 +184,12 @@ class Calculator extends Component {
         else expNum = Expression.ONE;
 
         return Promise.all([
-          showResult && this.props.updateResult(_expression),
+          isLastKeyEquals && this.props.updateResult(_expression),
           isLastKeyEquals && this.props.updateOperator(""),
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.NEGATE),
           this.props.toggleIsDirty(true),
-          this.props.toggleIsEvaluated(showResult),
+          this.props.toggleIsEvaluated(isLastKeyEquals),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
 
@@ -227,7 +208,7 @@ class Calculator extends Component {
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.DECIMAL),
           this.props.toggleIsDirty(true),
-          this.props.toggleIsEvaluated(false),
+          this.props.toggleIsEvaluated(isLastKeyEquals),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
 
@@ -257,10 +238,7 @@ class Calculator extends Component {
     // console.log(expression2);
     // console.log(result);
 
-    if (
-      lastKey === KeyType.EQUALS ||
-      (lastKey === KeyType.OPERATOR && result)
-    ) {
+    if (lastKey === KeyType.EQUALS || (lastKey === KeyType.OPERATOR && result)) {
       return result;
     } else {
       return operator ? expression2 : expression1;
@@ -318,12 +296,9 @@ const mapDispatchToProps = dispatch => ({
   setOrientation: orientation => dispatch(setOrientationAsync(orientation)),
   setLastKey: lastKey => dispatch(setLastKeyAsync(lastKey)),
   toggleIsDirty: isDirty => dispatch(toggleIsDirtyAsync(isDirty)),
-  toggleIsEvaluated: isEvaluated =>
-    dispatch(toggleIsEvaluatedAsync(isEvaluated)),
-  updateExpression1: expression1 =>
-    dispatch(updateExpression1Async(expression1)),
-  updateExpression2: expression2 =>
-    dispatch(updateExpression2Async(expression2)),
+  toggleIsEvaluated: isEvaluated => dispatch(toggleIsEvaluatedAsync(isEvaluated)),
+  updateExpression1: expression1 => dispatch(updateExpression1Async(expression1)),
+  updateExpression2: expression2 => dispatch(updateExpression2Async(expression2)),
   updateResult: result => dispatch(updateResultAsync(result)),
   updateOperator: operator => dispatch(updateOperatorAsync(operator)),
   updateHistory: history => dispatch(updateHistoryAsync(history))

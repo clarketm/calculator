@@ -8,11 +8,7 @@ export class CalculatorExpression extends Component {
 
     return (
       <View style={styles.container}>
-        <ScrollView
-          horizontal
-          contentContainerStyle={styles.scroll}
-          ref={scrollViewRef}
-        >
+        <ScrollView horizontal contentContainerStyle={styles.scroll} ref={scrollViewRef}>
           <Text style={[styles.text, dynamicFontSize(orientation, 70)]}>
             {expression}
           </Text>

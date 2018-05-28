@@ -15,10 +15,7 @@ import {
 const globalReducer = (state = Map(), action) => {
   switch (action.type) {
     case SET_ORIENTATION:
-      return state.set(
-        GlobalParam.ORIENTATION,
-        action[GlobalParam.ORIENTATION]
-      );
+      return state.set(GlobalParam.ORIENTATION, action[GlobalParam.ORIENTATION]);
 
     case TOGGLE_LAST_KEY:
       return state.set(GlobalParam.LAST_KEY, action[GlobalParam.LAST_KEY]);
@@ -27,22 +24,13 @@ const globalReducer = (state = Map(), action) => {
       return state.set(GlobalParam.IS_DIRTY, action[GlobalParam.IS_DIRTY]);
 
     case TOGGLE_IS_EVALUATED:
-      return state.set(
-        GlobalParam.IS_EVALUATED,
-        action[GlobalParam.IS_EVALUATED]
-      );
+      return state.set(GlobalParam.IS_EVALUATED, action[GlobalParam.IS_EVALUATED]);
 
     case UPDATE_EXPRESSION1:
-      return state.set(
-        GlobalParam.EXPRESSION1,
-        action[GlobalParam.EXPRESSION1]
-      );
+      return state.set(GlobalParam.EXPRESSION1, action[GlobalParam.EXPRESSION1]);
 
     case UPDATE_EXPRESSION2:
-      return state.set(
-        GlobalParam.EXPRESSION2,
-        action[GlobalParam.EXPRESSION2]
-      );
+      return state.set(GlobalParam.EXPRESSION2, action[GlobalParam.EXPRESSION2]);
 
     case UPDATE_RESULT:
       return state.set(GlobalParam.RESULT, action[GlobalParam.RESULT]);

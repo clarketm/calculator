@@ -1,0 +1,9 @@
+.idea
+*.iml
+*.log
+android
+ios
+res
+coverage
+node_modules
+package.json

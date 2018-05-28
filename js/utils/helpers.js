@@ -11,9 +11,7 @@ export const expressionToString = expression => {
 };
 
 export const endsWithOperator = expression => {
-  return (
-    expression.length > 0 && expression[expression.length - 1].match(/[+\-÷×]/)
-  );
+  return expression.length > 0 && expression[expression.length - 1].match(/[+\-÷×]/);
 };
 
 export const hasOperator = expression => {
@@ -54,7 +52,4 @@ export const ensureMutable = state => {
   return Iterable.isIterable(state) ? state.toJS() : state;
 };
 
-export const createImmutableSelector = createSelectorCreator(
-  defaultMemoize,
-  is
-);
+export const createImmutableSelector = createSelectorCreator(defaultMemoize, is);
