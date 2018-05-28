@@ -92,7 +92,15 @@ class Calculator extends Component {
   };
 
   handlePress = (key, type) => {
-    let { expression1, expression2, operator, history } = this.props;
+    let {
+      expression1,
+      expression2,
+      operator,
+      history,
+      lastKey,
+      isEvaluated,
+      result
+    } = this.props;
     let expNum, _expression;
 
     switch (type) {
@@ -109,6 +117,9 @@ class Calculator extends Component {
         ]);
 
       case KeyType.OPERATOR:
+        if (lastKey === KeyType.OPERATOR || lastKey === KeyType.EQUALS)
+          return this.props.updateOperator(key);
+
         if (operator) {
           let fullExp = `${expression1}${operator}${expression2}`;
           _expression = this.equal(fullExp);
@@ -116,7 +127,6 @@ class Calculator extends Component {
           return Promise.all([
             this.props.updateOperator(key),
             this.props.updateExpression1(_expression),
-            // this.props.updateExpression2(_expression),
             this.props.updateExpression2(expression2),
             this.props.updateResult(_expression),
             this.props.setLastKey(KeyType.OPERATOR),
@@ -129,7 +139,7 @@ class Calculator extends Component {
 
         return Promise.all([
           this.props.updateOperator(key),
-          this.props.updateExpression2(expression1),
+          this.props.updateExpression2(isEvaluated ? result : expression1),
           this.props.setLastKey(KeyType.OPERATOR),
           this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
@@ -212,22 +222,27 @@ class Calculator extends Component {
     }
   };
 
+  getDisplay = () => {
+    const { expression1, expression2, result, operator, lastKey } = this.props;
+
+    if (
+      lastKey === KeyType.EQUALS ||
+      (lastKey === KeyType.OPERATOR && result)
+    ) {
+      return result;
+    } else {
+      return operator ? expression2 : expression1;
+    }
+  };
+
   render() {
-    const {
-      expression1,
-      expression2,
-      orientation,
-      result,
-      operator,
-      history,
-      isDirty
-    } = this.props;
+    const { orientation, history, isDirty } = this.props;
 
     return (
       <View style={styles.container} onLayout={this.handleLayout}>
         <CalculatorExpression
           orientation={orientation}
-          expression={result ? result : operator ? expression2 : expression1}
+          expression={this.getDisplay()}
           scrollViewRef={ref => (this.scrollView = ref)}
         />
         <CalculatorExpressionHistory
