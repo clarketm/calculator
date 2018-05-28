@@ -13,7 +13,7 @@ const initialState = fromJS({
     [GlobalParam.IS_DIRTY]: false,
     [GlobalParam.EXPRESSION1]: "0",
     [GlobalParam.OPERATOR]: "",
-    [GlobalParam.EXPRESSION2]: "",
+    [GlobalParam.EXPRESSION2]: "0",
     [GlobalParam.HISTORY]: []
   }
 });

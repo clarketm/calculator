@@ -30,8 +30,8 @@ import {
 } from "../api/global/globalActions";
 
 class Calculator extends Component {
-  operand = (expression, key) => {
-    if (this.props.isEvaluated || isZero(expression)) {
+  operand = (expression, key, isDirty) => {
+    if (this.props.isEvaluated || isZero(expression) || isDirty) {
       return `${key}`;
     } else {
       return `${expression}${key}`;
@@ -80,8 +80,25 @@ class Calculator extends Component {
   };
 
   handlePress = (key, type) => {
-    let { expression1, expression2, operator, history } = this.props;
+    let { expression1, expression2, operator, history, isDirty } = this.props;
     let expNum, _expression;
+
+    const evaluate = key => {
+      if (!operator) return;
+
+      let fullExp = `${expression1}${operator}${expression2}`;
+      _expression = this.equal(fullExp);
+
+      return Promise.all([
+        this.props.updateOperator(key),
+        this.props.updateExpression1(_expression),
+        this.props.updateExpression2(_expression),
+        this.props.toggleIsDirty(true),
+        this.props.toggleIsEvaluated(true),
+        this.props.updateHistory(history.push(fullExp)),
+        this.scrollView.scrollToEnd({ animated: false })
+      ]);
+    };
 
     switch (type) {
       case KeyType.CLEAR:
@@ -94,27 +111,18 @@ class Calculator extends Component {
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.OPERATOR:
+        if (operator) return evaluate(key);
+
         return Promise.all([
           this.props.updateOperator(key),
+          this.props.updateExpression2(expression1),
           this.props.toggleIsDirty(true),
           this.props.toggleIsEvaluated(false),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.EQUALS:
-        if (!operator) return;
+        return evaluate(operator);
 
-        let fullExp = `${expression1}${operator}${expression2}`;
-        _expression = this.equal(fullExp);
-
-        return Promise.all([
-          this.props.updateOperator(null),
-          this.props.updateExpression1(_expression),
-          this.props.updateExpression2("0"),
-          this.props.toggleIsDirty(true),
-          this.props.toggleIsEvaluated(true),
-          this.props.updateHistory(history.push(fullExp)),
-          this.scrollView.scrollToEnd({ animated: false })
-        ]);
       case KeyType.PERCENT:
         _expression = this.percent(operator ? expression2 : expression1);
         if (operator) expNum = Expression.TWO;
@@ -146,7 +154,11 @@ class Calculator extends Component {
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.OPERAND:
-        _expression = this.operand(operator ? expression2 : expression1, key);
+        _expression = this.operand(
+          operator ? expression2 : expression1,
+          key,
+          isDirty
+        );
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
         return Promise.all([
