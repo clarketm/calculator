@@ -25,7 +25,8 @@ export const notHasOperator = expression => {
 };
 
 export const isZero = expression => {
-  return Number.parseInt(expression, 10) === 0;
+  // return Number.parseInt(expression, 10) === 0;
+  return expression.toString() === "0";
 };
 
 export const truncateByEvaluation = evaluation => {
