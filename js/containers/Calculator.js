@@ -153,7 +153,7 @@ class Calculator extends Component {
         _expression = this.equal(fullExp);
 
         return Promise.all([
-          this.props.updateOperator(operator),
+          this.props.updateOperator(null),
           this.props.updateExpression1(_expression),
           this.props.updateExpression2(expression2),
           this.props.updateResult(_expression),
@@ -165,12 +165,15 @@ class Calculator extends Component {
         ]);
 
       case KeyType.PERCENT:
-        _expression = this.percent(operator ? expression2 : expression1);
+        _expression = this.percent(
+          isEvaluated ? result : operator ? expression2 : expression1
+        );
 
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
 
         return Promise.all([
+          isEvaluated && this.props.updateResult(_expression),
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.PERCENT),
           this.props.toggleIsDirty(true),
@@ -179,12 +182,15 @@ class Calculator extends Component {
         ]);
 
       case KeyType.NEGATE:
-        _expression = this.negate(operator ? expression2 : expression1);
+        _expression = this.negate(
+          isEvaluated ? result.toString() : operator ? expression2 : expression1
+        );
 
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
 
         return Promise.all([
+          isEvaluated && this.props.updateResult(_expression),
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.NEGATE),
           this.props.toggleIsDirty(true),
@@ -193,12 +199,15 @@ class Calculator extends Component {
         ]);
 
       case KeyType.DECIMAL:
-        _expression = this.decimal(operator ? expression2 : expression1);
+        _expression = this.negate(
+          isEvaluated ? result : operator ? expression2 : expression1
+        );
 
         if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
 
         return Promise.all([
+          isEvaluated && this.props.updateResult(_expression),
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.DECIMAL),
           this.props.toggleIsDirty(true),
