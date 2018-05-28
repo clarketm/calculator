@@ -153,7 +153,7 @@ class Calculator extends Component {
         _expression = this.equal(fullExp);
 
         return Promise.all([
-          this.props.updateOperator(null),
+          this.props.updateOperator(operator),
           this.props.updateExpression1(_expression),
           this.props.updateExpression2(expression2),
           this.props.updateResult(_expression),
