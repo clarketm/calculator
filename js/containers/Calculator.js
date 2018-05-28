@@ -66,7 +66,7 @@ class Calculator extends Component {
     /*if (this.props.isEvaluated) {
       return "0.";
     } */
-    if (expression.includes(".")) {
+    if (expression.toString().includes(".")) {
       return `${expression}`;
     } else {
       return `${expression}.`;
@@ -110,7 +110,10 @@ class Calculator extends Component {
     } = this.props;
 
     let showResult = isEvaluated && lastKey !== KeyType.OPERAND;
-    let expNum, _expression;
+    let expNum, _expression, fullExp;
+
+    const isLastKeyEquals = this.props.lastKey === KeyType.EQUALS;
+    // const isLastKeyOperator = this.props.lastKey === KeyType.OPERATOR;
 
     switch (type) {
       case KeyType.CLEAR:
@@ -126,39 +129,38 @@ class Calculator extends Component {
         ]);
 
       case KeyType.OPERATOR:
-        if (lastKey === KeyType.OPERATOR || lastKey === KeyType.EQUALS)
-          return this.props.updateOperator(key);
+        if (lastKey === KeyType.OPERATOR) return this.props.updateOperator(key);
 
-        if (operator) {
-          let fullExp = `${expression1}${operator}${expression2}`;
-          _expression = this.equal(fullExp);
-
+        if (lastKey === KeyType.EQUALS || !operator) {
           return Promise.all([
             this.props.updateOperator(key),
-            this.props.updateExpression1(_expression),
-            this.props.updateResult(_expression),
+            this.props.updateExpression2(/*result ? result : */ expression1),
+            // this.props.updateExpression2(expression1),
             this.props.setLastKey(KeyType.OPERATOR),
             this.props.toggleIsDirty(true),
-            this.props.toggleIsEvaluated(true),
-            this.props.updateHistory(history.push(fullExp)),
+            this.props.toggleIsEvaluated(false),
             this.scrollView.scrollToEnd({ animated: false })
           ]);
         }
 
+        fullExp = `(${expression1})${operator}(${expression2})`;
+        _expression = this.equal(fullExp);
+
         return Promise.all([
           this.props.updateOperator(key),
-          this.props.updateExpression2(result ? result : expression1),
-          // this.props.updateExpression2(expression1),
+          this.props.updateExpression1(_expression),
+          this.props.updateResult(_expression),
           this.props.setLastKey(KeyType.OPERATOR),
           this.props.toggleIsDirty(true),
-          this.props.toggleIsEvaluated(false),
+          this.props.toggleIsEvaluated(true),
+          this.props.updateHistory(history.push(fullExp)),
           this.scrollView.scrollToEnd({ animated: false })
         ]);
 
       case KeyType.EQUALS:
         if (!operator) return;
 
-        let fullExp = `${expression1}${operator}${expression2}`;
+        fullExp = `(${expression1})${operator}(${expression2})`;
         _expression = this.equal(fullExp);
 
         return Promise.all([
@@ -174,16 +176,16 @@ class Calculator extends Component {
 
       case KeyType.PERCENT:
         _expression = this.percent(
-          showResult ? result : operator ? expression2 : expression1
+          isLastKeyEquals ? result : operator ? expression2 : expression1
         );
 
-        if (showResult) expNum = Expression.ONE;
+        if (isLastKeyEquals) expNum = Expression.ONE;
         else if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
 
         return Promise.all([
-          showResult && this.props.updateResult(_expression),
-          showResult && this.props.updateOperator(""),
+          isLastKeyEquals && this.props.updateResult(_expression),
+          isLastKeyEquals && this.props.updateOperator(""),
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.PERCENT),
           this.props.toggleIsDirty(true),
@@ -193,21 +195,16 @@ class Calculator extends Component {
 
       case KeyType.NEGATE:
         _expression = this.negate(
-          showResult ? result : operator ? expression2 : expression1
+          isLastKeyEquals ? result : operator ? expression2 : expression1
         );
 
-        if (showResult) expNum = Expression.ONE;
+        if (isLastKeyEquals) expNum = Expression.ONE;
         else if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
 
-        // console.log('expression1', expression1);
-        // console.log('expression2', expression2);
-        // console.log('result', result);
-        // console.log('_expression', _expression);
-
         return Promise.all([
-          // showResult && this.props.updateResult(_expression),
-          // showResult && this.props.updateOperator(""),
+          showResult && this.props.updateResult(_expression),
+          isLastKeyEquals && this.props.updateOperator(""),
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.NEGATE),
           this.props.toggleIsDirty(true),
@@ -216,19 +213,17 @@ class Calculator extends Component {
         ]);
 
       case KeyType.DECIMAL:
-        let _exp = showResult ? result : operator ? expression2 : expression1;
+        _expression = this.decimal(
+          isLastKeyEquals ? result : operator ? expression2 : expression1
+        );
 
-        if (_exp.includes(".")) return;
-
-        _expression = this.decimal(_exp);
-
-        if (showResult) expNum = Expression.ONE;
+        if (isLastKeyEquals) expNum = Expression.ONE;
         else if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
 
         return Promise.all([
-          showResult && this.props.updateResult(_expression),
-          showResult && this.props.updateOperator(""),
+          isLastKeyEquals && this.props.updateResult(_expression),
+          isLastKeyEquals && this.props.updateOperator(""),
           this.props[expNum](_expression),
           this.props.setLastKey(KeyType.DECIMAL),
           this.props.toggleIsDirty(true),
@@ -238,8 +233,6 @@ class Calculator extends Component {
 
       case KeyType.OPERAND:
         _expression = this.operand(operator ? expression2 : expression1, key);
-
-        const isLastKeyEquals = this.props.lastKey === KeyType.EQUALS;
 
         if (isLastKeyEquals) expNum = Expression.ONE;
         else if (operator) expNum = Expression.TWO;
@@ -260,11 +253,12 @@ class Calculator extends Component {
   getDisplay = () => {
     const { expression1, expression2, result, operator, lastKey } = this.props;
 
+    // console.log(expression1);
+    // console.log(expression2);
+    // console.log(result);
+
     if (
       lastKey === KeyType.EQUALS ||
-      (lastKey === KeyType.NEGATE && result) ||
-      (lastKey === KeyType.PERCENT && result) ||
-      (lastKey === KeyType.DECIMAL && result) ||
       (lastKey === KeyType.OPERATOR && result)
     ) {
       return result;
