@@ -121,7 +121,7 @@ class Calculator extends Component {
           this.scrollView.scrollToEnd({ animated: false })
         ]);
       case KeyType.EQUALS:
-        return evaluate(operator);
+        return evaluate(null);
 
       case KeyType.PERCENT:
         _expression = this.percent(operator ? expression2 : expression1);
