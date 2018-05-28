@@ -239,15 +239,15 @@ class Calculator extends Component {
       case KeyType.OPERAND:
         _expression = this.operand(operator ? expression2 : expression1, key);
 
-        // TODO
+        const isLastKeyEquals = this.props.lastKey === KeyType.EQUALS;
 
-        // if (showResult) expNum = Expression.ONE;
-        /*else */ if (operator) expNum = Expression.TWO;
+        if (isLastKeyEquals) expNum = Expression.ONE;
+        else if (operator) expNum = Expression.TWO;
         else expNum = Expression.ONE;
 
         return Promise.all([
-          // showResult && this.props.updateResult(0),
-          // showResult && this.props.updateOperator(""),
+          isLastKeyEquals && this.props.updateResult(0),
+          isLastKeyEquals && this.props.updateOperator(""),
           this.props[expNum](_expression),
           this.props.setLastKey(key),
           this.props.toggleIsDirty(true),
