@@ -107,8 +107,8 @@ class Calculator extends Component {
       case KeyType.CLEAR:
         return Promise.all([
           this.props.updateOperator(null),
-          this.props.updateExpression1("0"),
-          this.props.updateExpression2("0"),
+          this.props.updateExpression1(0),
+          this.props.updateExpression2(0),
           this.props.updateResult(0),
           this.props.setLastKey(KeyType.CLEAR),
           this.props.toggleIsDirty(false),
@@ -199,7 +199,7 @@ class Calculator extends Component {
         ]);
 
       case KeyType.DECIMAL:
-        _expression = this.negate(
+        _expression = this.decimal(
           isEvaluated ? result : operator ? expression2 : expression1
         );
 

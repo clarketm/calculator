@@ -13,9 +13,9 @@ const initialState = fromJS({
     [GlobalParam.IS_DIRTY]: false,
     [GlobalParam.IS_EVALUATED]: false,
     [GlobalParam.OPERATOR]: "",
-    [GlobalParam.EXPRESSION1]: "0",
-    [GlobalParam.EXPRESSION2]: "0",
-    [GlobalParam.RESULT]: "0",
+    [GlobalParam.EXPRESSION1]: 0,
+    [GlobalParam.EXPRESSION2]: 0,
+    [GlobalParam.RESULT]: 0,
     [GlobalParam.HISTORY]: []
   }
 });
