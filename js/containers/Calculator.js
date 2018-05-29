@@ -234,10 +234,6 @@ class Calculator extends Component {
   getDisplay = () => {
     const { expression1, expression2, result, operator, lastKey } = this.props;
 
-    // console.log(expression1);
-    // console.log(expression2);
-    // console.log(result);
-
     if (lastKey === KeyType.EQUALS || (lastKey === KeyType.OPERATOR && result)) {
       return result;
     } else {
